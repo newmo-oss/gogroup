@@ -7,8 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newmo-oss/gogroup"
 	"go.uber.org/goleak"
+
+	"github.com/newmo-oss/gogroup"
 )
 
 func TestMain(m *testing.M) {
