@@ -9,6 +9,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/uuid"
 	"github.com/newmo-oss/testid"
+	"github.com/newmo-oss/gotestingmock"
 
 	"github.com/newmo-oss/gogroup"
 	"github.com/newmo-oss/gogroup/gogrouptest"
@@ -27,6 +28,13 @@ func TestWithoutParallel(t *testing.T) {
 	for name, tt := range cases {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+			var cleanedup bool
+			t.Cleanup(func() {
+				if tt.noParallel && !cleanedup {
+					t.Error("t.Cleanup must be called")
+				}
+			})
+
 			var want, got []int
 			var mu sync.Mutex
 			var g gogroup.Group
@@ -47,7 +55,14 @@ func TestWithoutParallel(t *testing.T) {
 			ctx := testid.WithValue(context.Background(), tid)
 
 			if tt.noParallel {
-				gogrouptest.WithoutParallel(t, ctx)
+				tb := &gotestingmock.TB{
+					TB: t,
+					CleanupFunc: func(f func()) {
+						cleanedup = true
+						t.Cleanup(f)
+					},
+				}
+				gogrouptest.WithoutParallel(tb, ctx)
 			}
 
 			if err := g.Run(ctx); err != nil {
