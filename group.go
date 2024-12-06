@@ -5,8 +5,7 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/sourcegraph/conc/panics"
-	"github.com/sourcegraph/conc/pool"
+	"github.com/newmo-oss/gogroup/internal"
 )
 
 // Group is a group of goroutines used to run functions concurrently.
@@ -27,22 +26,11 @@ func (g *Group) Add(f func(context.Context) error) {
 }
 
 func (g *Group) start(ctx context.Context) func() error {
-	p := pool.New().WithContext(ctx).WithCancelOnError()
-
 	g.mu.Lock()
 	funcs := slices.Clone(g.funcs)
 	g.mu.Unlock()
 
-	for _, f := range funcs {
-		p.Go(func(ctx context.Context) (rerr error) {
-			if r := panics.Try(func() { rerr = f(ctx) }); r != nil {
-				return r.AsError()
-			}
-			return rerr
-		})
-	}
-
-	return p.Wait // return method value
+	return internal.Start(ctx, funcs)
 }
 
 // Run calls all registered functions in different goroutines.

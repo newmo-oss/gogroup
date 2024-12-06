@@ -7,9 +7,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/newmo-oss/testid"
 	"go.uber.org/goleak"
 
 	"github.com/newmo-oss/gogroup"
+	"github.com/newmo-oss/gogroup/gogrouptest"
 )
 
 func TestMain(m *testing.M) {
@@ -47,23 +50,10 @@ func TestGroup(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			var (
-				doneCh   = make([]chan struct{}, len(tt.funcs))
-				canceled atomic.Bool
-			)
+			var canceled atomic.Bool
 			var g gogroup.Group
 			for i, f := range tt.funcs {
-				doneCh[i] = make(chan struct{})
 				g.Add(func(ctx context.Context) error {
-					defer func() {
-						close(doneCh[i])
-					}()
-
-					// wait before function call
-					if i > 0 {
-						<-doneCh[i-1]
-					}
-
 					if tt.wantCanceledFunc >= 0 && tt.wantCanceledFunc < i {
 						select {
 						case <-time.After(1 * time.Second):
@@ -71,12 +61,13 @@ func TestGroup(t *testing.T) {
 							canceled.Store(true)
 						}
 					}
-
 					return f(ctx)
 				})
 			}
 
-			ctx := withCancel(context.Background())
+			tid := t.Name() + "/" + uuid.NewString()
+			ctx := withCancel(testid.WithValue(context.Background(), tid))
+			gogrouptest.WithoutParallel(t, ctx)
 			err := g.Run(ctx)
 
 			switch {
