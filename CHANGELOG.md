@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.1](https://github.com/newmo-oss/gogroup/compare/v0.2.0...v0.2.1) - 2025-03-11
+- Update go version and dependencies by @tenntenn in https://github.com/newmo-oss/gogroup/pull/7
+
 ## [v0.2.0](https://github.com/newmo-oss/gogroup/compare/v0.1.0...v0.2.0) - 2024-12-06
 - Add gogrouptest by @tenntenn in https://github.com/newmo-oss/gogroup/pull/5
 
