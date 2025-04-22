@@ -22,5 +22,23 @@ if err := g.Run(ctx); err != nil {
 }
 ```
 
+## gogroupcheck
+
+**gogroupcheck** is an analyzer that reports any use of `sync.WaitGroup`, `golang.org/x/sync/errgroup.Group`,  
+`github.com/sourcegraph/conc.WaitGroup`, and `github.com/sourcegraph/conc/pool` (and its subpackages), keeping your
+codebase on a single, consistent concurrency library.
+
+### Install
+
+```sh
+go install github.com/newmo-oss/gogroupcheck/cmd/gogroupcheck@latest
+```
+
+### Usage
+
+```sh
+go vet -vettool=$(which gogroupcheck) ./...
+```
+
 ## License
 MIT
