@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.2](https://github.com/newmo-oss/gogroup/compare/v0.2.1...v0.2.2) - 2025-06-09
+- Add gogroupcheck by @tenntenn in https://github.com/newmo-oss/gogroup/pull/9
+- Add dependabot by @tenntenn in https://github.com/newmo-oss/gogroup/pull/11
+- Bump golang.org/x/tools from 0.32.0 to 0.33.0 by @dependabot in https://github.com/newmo-oss/gogroup/pull/12
+- Update Go version to 1.23.10 by @tenntenn in https://github.com/newmo-oss/gogroup/pull/13
+
 ## [v0.2.1](https://github.com/newmo-oss/gogroup/compare/v0.2.0...v0.2.1) - 2025-03-11
 - Update go version and dependencies by @tenntenn in https://github.com/newmo-oss/gogroup/pull/7
 
