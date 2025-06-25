@@ -7,10 +7,10 @@ type groupOptions struct {
 	limit int
 }
 
-// WithLimit sets the maximum number of goroutines used to run the functions.
-func WithLimit(limit int) Option {
+// WithLimit sets the maximum number of goroutines used to run the functions. Ignored if n < 1.
+func WithLimit(n int) Option {
 	return func(o *groupOptions) error {
-		o.limit = limit
+		o.limit = n
 		return nil
 	}
 }
