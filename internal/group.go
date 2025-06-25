@@ -21,3 +21,16 @@ func DefaultStart(ctx context.Context, funcs []func(context.Context) error) func
 	}
 	return p.Wait // return method value
 }
+
+func StartWithLimit(ctx context.Context, funcs []func(context.Context) error, limit int) func() error {
+	p := pool.New().WithContext(ctx).WithCancelOnError().WithMaxGoroutines(limit)
+	for _, f := range funcs {
+		p.Go(func(ctx context.Context) (rerr error) {
+			if r := panics.Try(func() { rerr = f(ctx) }); r != nil {
+				return r.AsError()
+			}
+			return rerr
+		})
+	}
+	return p.Wait // return method value
+}

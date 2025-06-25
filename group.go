@@ -14,8 +14,9 @@ import (
 // If a panic occurs in a function, Run recovers the panic and returns it as an error.
 // If any function returns non nil error, the context is canceled.
 type Group struct {
-	mu    sync.Mutex
-	funcs []func(context.Context) error
+	mu      sync.Mutex
+	funcs   []func(context.Context) error
+	options groupOptions
 }
 
 // Add adds a function to the group.
@@ -30,11 +31,20 @@ func (g *Group) start(ctx context.Context) func() error {
 	funcs := slices.Clone(g.funcs)
 	g.mu.Unlock()
 
+	if g.options.limit > 0 {
+		return internal.StartWithLimit(ctx, funcs, g.options.limit)
+	}
 	return internal.Start(ctx, funcs)
 }
 
 // Run calls all registered functions in different goroutines.
-func (g *Group) Run(ctx context.Context) error {
+func (g *Group) Run(ctx context.Context, opts ...Option) error {
+	for _, o := range opts {
+		err := o(&g.options)
+		if err != nil {
+			return err
+		}
+	}
 	return g.start(ctx)()
 }
 
