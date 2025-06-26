@@ -1,16 +1,11 @@
 package gogroup
 
-// GroupOption is an option to configure [(*Group).Run] behaviour.
-type Option func(*groupOptions) error
-
-type groupOptions struct {
-	limit int
-}
+import "github.com/newmo-oss/gogroup/internal"
 
 // WithLimit sets the maximum number of goroutines used to run the functions. Ignored if n < 1.
-func WithLimit(n int) Option {
-	return func(o *groupOptions) error {
-		o.limit = n
+func WithLimit(n int) internal.Option {
+	return func(o *internal.GroupOptions) error {
+		o.Limit = n
 		return nil
 	}
 }

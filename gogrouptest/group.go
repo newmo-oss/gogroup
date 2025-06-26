@@ -57,7 +57,7 @@ func noParallel(ctx context.Context) bool {
 	return noparallel
 }
 
-func startForTest(ctx context.Context, funcs []func(context.Context) error) func() error {
+func startForTest(ctx context.Context, funcs []func(context.Context) error, _ ...internal.Option) func() error {
 	if !noParallel(ctx) {
 		return internal.DefaultStart(ctx, funcs)
 	}
