@@ -9,23 +9,15 @@ import (
 
 var Start = DefaultStart
 
-// GroupOption is an option to configure [(*Group).Run] behaviour.
-type Option func(*GroupOptions) error
-
 type GroupOptions struct {
 	Limit int
 }
 
-func DefaultStart(ctx context.Context, funcs []func(context.Context) error, opts ...Option) func() error {
-	var o GroupOptions
-	for _, opt := range opts {
-		opt(&o)
-	}
-
+func DefaultStart(ctx context.Context, funcs []func(context.Context) error, option GroupOptions) func() error {
 	p := pool.New().WithContext(ctx).WithCancelOnError()
 
-	if o.Limit > 0 {
-		p = p.WithMaxGoroutines(o.Limit)
+	if option.Limit > 0 {
+		p = p.WithMaxGoroutines(option.Limit)
 	}
 
 	for _, f := range funcs {

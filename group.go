@@ -25,17 +25,22 @@ func (g *Group) Add(f func(context.Context) error) {
 	g.mu.Unlock()
 }
 
-func (g *Group) start(ctx context.Context, opts ...internal.Option) func() error {
+func (g *Group) start(ctx context.Context, opts ...GroupOption) func() error {
 	g.mu.Lock()
 	funcs := slices.Clone(g.funcs)
 	g.mu.Unlock()
 
-	return internal.Start(ctx, funcs, opts...)
+	o := internal.GroupOptions{}
+	for _, opt := range opts {
+		opt.apply(&o)
+	}
+
+	return internal.Start(ctx, funcs, o)
 }
 
 // Run calls all registered functions in different goroutines.
-func (g *Group) Run(ctx context.Context, opts ...internal.Option) error {
-	return g.start(ctx)()
+func (g *Group) Run(ctx context.Context, opts ...GroupOption) error {
+	return g.start(ctx, opts...)()
 }
 
 // Start calls the function in new goroutine and returns a wait function.
