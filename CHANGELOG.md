@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.3.0](https://github.com/newmo-oss/gogroup/compare/v0.2.1...v0.3.0) - 2025-07-02
+- Add gogroupcheck by @tenntenn in https://github.com/newmo-oss/gogroup/pull/9
+- Add dependabot by @tenntenn in https://github.com/newmo-oss/gogroup/pull/11
+- Bump golang.org/x/tools from 0.32.0 to 0.33.0 by @dependabot in https://github.com/newmo-oss/gogroup/pull/12
+- Update Go version to 1.23.10 by @tenntenn in https://github.com/newmo-oss/gogroup/pull/13
+- Add WithLimit option by @sodefrin in https://github.com/newmo-oss/gogroup/pull/15
+- Bump golang.org/x/tools from 0.33.0 to 0.34.0 by @dependabot in https://github.com/newmo-oss/gogroup/pull/14
+
 ## [v0.2.1](https://github.com/newmo-oss/gogroup/compare/v0.2.0...v0.2.1) - 2025-03-11
 - Update go version and dependencies by @tenntenn in https://github.com/newmo-oss/gogroup/pull/7
 
