@@ -57,9 +57,9 @@ func noParallel(ctx context.Context) bool {
 	return noparallel
 }
 
-func startForTest(ctx context.Context, funcs []func(context.Context) error) func() error {
+func startForTest(ctx context.Context, funcs []func(context.Context) error, option internal.Options) func() error {
 	if !noParallel(ctx) {
-		return internal.DefaultStart(ctx, funcs)
+		return internal.DefaultStart(ctx, funcs, option)
 	}
 
 	p := pool.New().WithContext(ctx).WithCancelOnError()

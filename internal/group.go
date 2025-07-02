@@ -9,8 +9,17 @@ import (
 
 var Start = DefaultStart
 
-func DefaultStart(ctx context.Context, funcs []func(context.Context) error) func() error {
+type Options struct {
+	Limit int
+}
+
+func DefaultStart(ctx context.Context, funcs []func(context.Context) error, option Options) func() error {
 	p := pool.New().WithContext(ctx).WithCancelOnError()
+
+	if option.Limit > 0 {
+		p = p.WithMaxGoroutines(option.Limit)
+	}
+
 	for _, f := range funcs {
 		p.Go(func(ctx context.Context) (rerr error) {
 			if r := panics.Try(func() { rerr = f(ctx) }); r != nil {
