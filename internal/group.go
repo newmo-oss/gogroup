@@ -9,11 +9,11 @@ import (
 
 var Start = DefaultStart
 
-type GroupOptions struct {
+type Options struct {
 	Limit int
 }
 
-func DefaultStart(ctx context.Context, funcs []func(context.Context) error, option GroupOptions) func() error {
+func DefaultStart(ctx context.Context, funcs []func(context.Context) error, option Options) func() error {
 	p := pool.New().WithContext(ctx).WithCancelOnError()
 
 	if option.Limit > 0 {

@@ -25,12 +25,12 @@ func (g *Group) Add(f func(context.Context) error) {
 	g.mu.Unlock()
 }
 
-func (g *Group) start(ctx context.Context, opts ...GroupOption) func() error {
+func (g *Group) start(ctx context.Context, opts ...Option) func() error {
 	g.mu.Lock()
 	funcs := slices.Clone(g.funcs)
 	g.mu.Unlock()
 
-	o := internal.GroupOptions{}
+	o := internal.Options{}
 	for _, opt := range opts {
 		opt.apply(&o)
 	}
@@ -39,7 +39,7 @@ func (g *Group) start(ctx context.Context, opts ...GroupOption) func() error {
 }
 
 // Run calls all registered functions in different goroutines.
-func (g *Group) Run(ctx context.Context, opts ...GroupOption) error {
+func (g *Group) Run(ctx context.Context, opts ...Option) error {
 	return g.start(ctx, opts...)()
 }
 
